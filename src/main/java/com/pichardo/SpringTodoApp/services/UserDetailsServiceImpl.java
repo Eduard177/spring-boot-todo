@@ -36,6 +36,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public void save(NewUserDto userDto) {
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         User user = entityMapper.newUserDtoToUser(userDto);
+        user.setUsername(userDto.getUsername().toLowerCase());
         userRepository.save(user);
     }
 }

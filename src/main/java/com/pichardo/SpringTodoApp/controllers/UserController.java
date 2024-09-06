@@ -2,6 +2,7 @@ package com.pichardo.SpringTodoApp.controllers;
 
 import com.pichardo.SpringTodoApp.models.User;
 import com.pichardo.SpringTodoApp.services.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.AccessDeniedException;
@@ -22,11 +23,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable Long userId) throws AccessDeniedException {
-        userService.deleteUser(userId);
+    public ResponseEntity<?> deleteUser(@PathVariable Long userId) throws AccessDeniedException {
+        return userService.deleteUser(userId);
     }
-
-
-
-
 }

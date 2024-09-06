@@ -2,6 +2,7 @@ package com.pichardo.SpringTodoApp.services;
 
 import com.pichardo.SpringTodoApp.models.User;
 import com.pichardo.SpringTodoApp.repositories.UserRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
@@ -36,9 +37,10 @@ public class UserService{
         return res.orElse(null);
     }
 
-    public void deleteUser(Long id) throws AccessDeniedException {
+    public ResponseEntity<?> deleteUser(Long id) throws AccessDeniedException {
         if(taskService.isLogged()) {
             userRepo.delete(getUser(id));
+            return ResponseEntity.ok("User was successfully deleted");
         }
         throw new AccessDeniedException("You are not authenticated");
 
