@@ -1,5 +1,7 @@
 package com.pichardo.SpringTodoApp.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -17,5 +19,6 @@ public class User {
     private String username;
     private String password;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Task> todos;
 }

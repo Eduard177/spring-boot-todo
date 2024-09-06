@@ -4,6 +4,7 @@ import com.pichardo.SpringTodoApp.models.User;
 import com.pichardo.SpringTodoApp.services.UserService;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController()
@@ -16,12 +17,12 @@ public class UserController {
     }
 
     @GetMapping("/list")
-    public List<User> getUsers(){
+    public List<User> getUsers() throws AccessDeniedException {
         return userService.getUsers();
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable Long userId){
+    public void deleteUser(@PathVariable Long userId) throws AccessDeniedException {
         userService.deleteUser(userId);
     }
 

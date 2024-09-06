@@ -4,6 +4,7 @@ import com.pichardo.SpringTodoApp.models.User;
 import com.pichardo.SpringTodoApp.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,17 +12,23 @@ import java.util.Optional;
 @Service
 public class UserService{
     private final UserRepository userRepo;
+    private TaskService taskService;
 
-    public UserService(UserRepository userRepo) {
+    public UserService(UserRepository userRepo, TaskService taskService) {
         this.userRepo = userRepo;
+        this.taskService = taskService;
     }
 
-    public List<User> getUsers(){
-        List<User> allUsers = new ArrayList<User>();
+    public List<User> getUsers() throws AccessDeniedException {
+        if(taskService.isLogged()){
+            List<User> allUsers = new ArrayList<>();
 
-        userRepo.findAll().forEach(allUsers::add);
+            userRepo.findAll().forEach(allUsers::add);
 
-        return allUsers;
+            return allUsers;
+        }
+        throw new AccessDeniedException("You are not authenticated");
+
     }
 
     public User getUser(Long id){
@@ -29,13 +36,11 @@ public class UserService{
         return res.orElse(null);
     }
 
-    public Long addUser(User User){
-        User newUser = userRepo.save(User);
-        return newUser.getId();
+    public void deleteUser(Long id) throws AccessDeniedException {
+        if(taskService.isLogged()) {
+            userRepo.delete(getUser(id));
+        }
+        throw new AccessDeniedException("You are not authenticated");
 
-    }
-
-    public void deleteUser(Long id){
-        userRepo.delete(getUser(id));
     }
 }

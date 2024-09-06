@@ -6,6 +6,7 @@ import com.pichardo.SpringTodoApp.services.TaskService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController()
@@ -19,15 +20,16 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<Task> getUserTasks() {
+    public List<Task> getUserTasks() throws AccessDeniedException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Long userId = taskService.getUserIdFromUsername(username);
         return taskService.getUserTasks(userId);
     }
 
     @PostMapping
-    public Task addTask(@RequestBody NewTaskDto task) {
+    public Task addTask(@RequestBody NewTaskDto task) throws AccessDeniedException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
         Long userId = taskService.getUserIdFromUsername(username);
         return taskService.addTask(userId, task);
     }
@@ -35,6 +37,7 @@ public class TaskController {
     @PutMapping("/{taskId}/resolve")
     public void resolveTask(@PathVariable Long taskId) throws Exception {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
         taskService.resolveTask(taskId, username);
     }
 

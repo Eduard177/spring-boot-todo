@@ -1,6 +1,7 @@
 package com.pichardo.SpringTodoApp.controllers;
 
 import com.pichardo.SpringTodoApp.dto.Login;
+import com.pichardo.SpringTodoApp.dto.LoginRes;
 import com.pichardo.SpringTodoApp.dto.NewUserDto;
 import com.pichardo.SpringTodoApp.services.UserDetailsServiceImpl;
 import com.pichardo.SpringTodoApp.utils.JwtUtil;
@@ -35,7 +36,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Login user) throws Exception {
+    public ResponseEntity<LoginRes> login(@RequestBody Login user) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
         } catch (AuthenticationException e) {
@@ -44,6 +45,7 @@ public class AuthController {
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         final String jwt = jwtUtil.generateToken(userDetails);
-        return ResponseEntity.ok(jwt);
+        LoginRes res = new LoginRes(user.getUsername(), jwt);
+        return ResponseEntity.ok(res);
     }
 }
